@@ -1,0 +1,19 @@
+# Environment
+.env
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Dependency directories (if composer is added later)
+vendor/
+
+# Logs
+*.log
+
+# Docker volumes data (if mounted locally)
+db_data/

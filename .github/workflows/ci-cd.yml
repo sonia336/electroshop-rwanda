@@ -1,0 +1,58 @@
+name: ElectroShop CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  # ------------------------------------------------------------
+  # Job 1: Build & Test - validates code and builds the Docker image
+  # ------------------------------------------------------------
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pdo, pdo_mysql, mysqli
+
+      - name: Lint PHP files (syntax check)
+        run: |
+          find . -name "*.php" -not -path "./vendor/*" -print0 | xargs -0 -n1 php -l
+
+      - name: Run automated smoke tests
+        run: php tests/smoke_test.php
+
+      - name: Build Docker image
+        run: docker build -t electroshop:latest .
+
+      - name: Verify container starts correctly
+        run: |
+          docker run -d --name electroshop_test -p 8080:80 electroshop:latest
+          sleep 5
+          docker ps | grep electroshop_test
+          docker logs electroshop_test
+          docker stop electroshop_test
+
+  # ------------------------------------------------------------
+  # Job 2: Deploy - triggers deployment on Render via deploy hook
+  # (Only runs on pushes to main, and only after build-and-test passes)
+  # ------------------------------------------------------------
+  deploy:
+    needs: build-and-test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger Render deployment
+        run: |
+          curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
+        # RENDER_DEPLOY_HOOK_URL must be added under
+        # GitHub repo -> Settings -> Secrets and variables -> Actions
