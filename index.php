@@ -22,10 +22,22 @@ require __DIR__ . '/includes/header.php';
 <section class="categories">
     <h2>Shop by Category</h2>
     <div class="category-grid">
-        <a href="products.php?category=1" class="category-card">Smartphones</a>
-        <a href="products.php?category=2" class="category-card">Laptops</a>
-        <a href="products.php?category=3" class="category-card">Audio</a>
-        <a href="products.php?category=4" class="category-card">Accessories</a>
+        <a href="products.php?category=1" class="category-card">
+            <img src="assets/images/phone1.jpg" alt="Smartphones">
+            <span>Smartphones</span>
+        </a>
+        <a href="products.php?category=2" class="category-card">
+            <img src="assets/images/laptop1.jpg" alt="Laptops">
+            <span>Laptops</span>
+        </a>
+        <a href="products.php?category=3" class="category-card">
+            <img src="assets/images/audio1.jpg" alt="Audio">
+            <span>Audio</span>
+        </a>
+        <a href="products.php?category=4" class="category-card">
+            <img src="assets/images/acc1.jpg" alt="Accessories">
+            <span>Accessories</span>
+        </a>
     </div>
 </section>
 
