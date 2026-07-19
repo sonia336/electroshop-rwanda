@@ -52,7 +52,10 @@ jobs:
 
     steps:
       - name: Trigger Render deployment
+        env:
+          DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
         run: |
-          curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
+          echo "Secret length: ${#DEPLOY_HOOK}"
+          curl -fsS -X POST "$DEPLOY_HOOK"
         # RENDER_DEPLOY_HOOK_URL must be added under
         # GitHub repo -> Settings -> Secrets and variables -> Actions
